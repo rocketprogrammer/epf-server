@@ -103,7 +103,7 @@ async def handleSubmit(request):
         password = Crypto.hash(password).upper()
         password = Crypto.getLoginHash(password, rndk = 'houdini')
 
-        if not bcrypt.checkpw(password.encode(), dbPassword[0][0]):
+        if not bcrypt.checkpw(password.encode(), dbPassword[0][0].encode()):
             return web.Response()
         else:
             return web.Response(text = '001')
