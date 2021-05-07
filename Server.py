@@ -59,12 +59,9 @@ class RequestTypes:
     DOWNLOAD_NEWSLETTER = 9
 
 async def handleSubmit(request):
-    #print(request.method, request.path, request.query, request.headers)
     args = await request.post()
-    #print('args', args)
 
     requestId = int(args.get('RequestID'))
-    print('requestId', requestId)
 
     if requestId in (RequestTypes.ACCOUNT_VALIDATION, RequestTypes.UPLOAD_COINS):
         username = args.get('UserName').decode().lower()
@@ -75,7 +72,7 @@ async def handleSubmit(request):
 
         cur.execute("""SELECT coins FROM penguin WHERE username = %(username)s""", {'username': username})
         curAmount = cur.fetchall()
-        
+
         if curAmount == []:
             return web.Response()
 
