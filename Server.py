@@ -75,10 +75,12 @@ async def handleSubmit(request):
 
         if curAmount == []:
             return web.Response()
+        else:
+            curAmount = curAmount[0][0]
 
-        curAmount[0][0] += amount
+        curAmount += amount
 
-        cur.execute("""UPDATE penguin SET coins = %(curAmount)s WHERE username = %(username)s""", {'curAmount': curAmount[0][0], 'username': username})
+        cur.execute("""UPDATE penguin SET coins = %(curAmount)s WHERE username = %(username)s""", {'curAmount': curAmount, 'username': username})
         conn.commit()
 
         return web.Response(text = '001')
