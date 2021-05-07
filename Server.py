@@ -78,12 +78,10 @@ async def handleSubmit(request):
         
         if curAmount == []:
             return web.Response()
-        else:
-            curAmount = curAmount[0][0]
 
-        curAmount += amount
+        curAmount[0][0] += amount
 
-        cur.execute("""UPDATE penguin SET coins = %(curAmount)s WHERE username = %(username)s""", {'curAmount': curAmount, 'username': username})
+        cur.execute("""UPDATE penguin SET coins = %(curAmount)s WHERE username = %(username)s""", {'curAmount': curAmount[0][0], 'username': username})
         conn.commit()
 
         return web.Response(text = '001')
@@ -100,12 +98,15 @@ async def handleSubmit(request):
 
     elif requestId == RequestTypes.ACCOUNT_VALIDATION:
         cur.execute("""SELECT password FROM penguin WHERE username = %(username)s""", {'username': username})
-        dbPassword = cur.fetchall()[0][0]
+        dbPassword = cur.fetchall()
+
+        if dbPassword == []:
+            return web.Response()
 
         password = Crypto.hash(password).upper()
         password = Crypto.getLoginHash(password, rndk = 'houdini')
 
-        if not bcrypt.checkpw(password.encode(), dbPassword.encode()):
+        if not bcrypt.checkpw(password.encode(), dbPassword[0][0]):
             return web.Response()
         else:
             return web.Response(text = '001')
