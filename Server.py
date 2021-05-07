@@ -1,6 +1,6 @@
 from aiohttp import web
 from hashlib import md5
-import asyncio, logging, psycopg2, bcrypt, json
+import asyncio, logging, psycopg2, bcrypt, json, sys
 
 # Setup logging for web requests.
 logging.basicConfig(level = logging.INFO)
@@ -74,10 +74,12 @@ async def handleSubmit(request):
         amount = int(args.get('Amount'))
 
         cur.execute("""SELECT coins FROM penguin WHERE username = %(username)s""", {'username': username})
-        curAmount = cur.fetchall()[0][0]
-
-        if curAmount < 0:
+        curAmount = cur.fetchall()
+        
+        if curAmount == []:
             return web.Response()
+        else:
+            curAmount = curAmount[0][0]
 
         curAmount += amount
 
@@ -117,4 +119,10 @@ async def initializeService():
 
 loop = asyncio.get_event_loop()
 app = loop.run_until_complete(initializeService())
-web.run_app(app, host = '0.0.0.0', port = 80)
+
+if '--nginx-proxy' in sys.argv:
+    port = 8080
+else:
+    port = 80
+
+web.run_app(app, host = '0.0.0.0', port = port)
