@@ -1,0 +1,14 @@
+# Config
+credentials.json
+
+# DNS
+dns-server/AcrylicCache.dat
+dns-server/AcrylicDNSProxyHitLog.*.txt
+
+# Python
+__pycache__/*
+
+# Personal
+rom/*
+tools/*
+stunnel/*
