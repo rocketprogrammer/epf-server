@@ -83,7 +83,7 @@ async def handleSubmit(request):
         cur.execute("""UPDATE penguin SET coins = %(curAmount)s WHERE username = %(username)s""", {'curAmount': curAmount, 'username': username})
         conn.commit()
 
-        return web.Response(text = '001')
+        return web.Response(text = str(amount))
 
     elif requestId == RequestTypes.ONLINE_POLL:
         return web.Response(text = 'Test Poll')
